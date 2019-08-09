@@ -15,12 +15,12 @@ module.exports = {
         const newUser = await db.insert_user_info({username, profileimg})
         db.insert_hash({ hash, user_id: newUser[0].user_id })
         .then(() => {
-            const loggedinUser = newUser[0]
+            req.session.user = newUser[0]
           res
             .status(200)
             .send({
                 message: 'Logged in',
-                user: loggedinUser,
+                user: req.session.user,
                 loggedIn: true
               })
         })
@@ -32,17 +32,18 @@ module.exports = {
     login: async (req, res) => {
         console.log(req.session)
         const db = req.app.get('db')
+        console.log(req.body)
         const {username, password} = req.body
         const user = await db.find_username_and_hash([username])
+        console.log(user)
         if (user.length === 0) {
           return res.status(400).send({message: 'username not found'})
         }
         const result = bcrypt.compareSync(password, user[0].hash)
-            const loggedInUser = user[0]
-            console.log(loggedInUser)
+        console.log(result)
         if (result) {
-          delete loggedInUser.hash
-          req.session.user = loggedInUser
+          delete user[0].hash
+          req.session.user = user[0]
           return res.status(200).send({message: 'Logged in', user: req.session.user, loggedIn: true})
         }
       },
