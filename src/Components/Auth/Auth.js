@@ -25,7 +25,6 @@ registerUser = () => {
     passwordInput: password,
     profileInput: profileimg
   } = this.state
-  console.log('hit')
   axios.post('/auth/register', { username, password, profileimg })
     .then(res => {
       this.props.setUser({username, profileimg, password})
@@ -39,18 +38,18 @@ registerUser = () => {
   login = () => {
     const {usernameInput: username, passwordInput: password} = this.state
     axios.post('/auth/login', {username, password}).then(res => {
-      console.log(res.data)
-      const {username, profileimg, password} = res.data.user
-      this.props.setUser({username, profileimg, password})
+ 
+      const {username, profile_img} = res.data.user
+      this.props.setUser({username, profile_img})
       this.props.history.push('/dashboard')
     })
     .catch(err => {
-      alert('Try again.')
+      alert('Incorrect username and or password')
     })
   }
 
   render() {
-    console.log(this.props)
+
     return (
       <div className = "Auth">
           <div className= "auth_container">

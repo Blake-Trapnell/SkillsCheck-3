@@ -1,23 +1,40 @@
 import React, {Component} from 'react'
 import './Nav.css'
 import {Link} from "react-router-dom"
+import { connect } from 'react-redux'
+import {withRouter} from "react-router-dom"
 
 
-export default class Nav extends Component {
+class Nav extends Component {
+  state = {
+    profileimg: "",
+    username: '',
+  }
 
   render() {
+    console.log(this.props)
     return (
-            <div>
+            <div className= "Nav">
+              <div className="profile_border">
+              <img className= "profile_pic" src={this.props.profileimg} alt=""/>
+              </div>
               <Link to = "/dashboard">
-              <button>Home</button>
+              <button className="Nav_buttons">Home</button>
               </Link>
               <Link to = "/post">
-              <button>New Post</button>
+              <button className="Nav_buttons">New Post</button>
               </Link>
+              <div className="logout_button">
               <Link to = "/">
-              <button>Logout</button>
+              <button className="Nav_buttons">Logout</button>
               </Link>
+              </div>
             </div>
     )
   }
 }
+function mapStateToProps(reduxState) {
+  const {username, profileimg} = reduxState
+  return ({username, profileimg})
+}
+export default connect(mapStateToProps)(withRouter(Nav))

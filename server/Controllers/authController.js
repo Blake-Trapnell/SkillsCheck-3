@@ -30,10 +30,9 @@ module.exports = {
         // })
     },
     login: async (req, res) => {
-        console.log(req.session)
         const db = req.app.get('db')
         console.log(req.body)
-        const {username, password} = req.body
+        const {username, password,} = req.body
         const user = await db.find_username_and_hash([username])
         console.log(user)
         if (user.length === 0) {
