@@ -24,10 +24,9 @@ module.exports = {
                 loggedIn: true
               })
         })
-        
-        // .catch(err => {
-        //   res.status(500).send({message: 'Failed to register'})
-        // })
+        .catch(err => {
+          res.status(500).send({message: 'Failed to register'})
+        })
     },
     login: async (req, res) => {
         const db = req.app.get('db')
