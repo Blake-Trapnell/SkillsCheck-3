@@ -16,6 +16,7 @@ module.exports = {
         db.insert_hash({ hash, user_id: newUser[0].user_id })
         .then(() => {
             req.session.user = newUser[0]
+           req.sesion.user_id = newUser[0].user_id
           res
             .status(200)
             .send({
@@ -33,12 +34,11 @@ module.exports = {
         console.log(req.body)
         const {username, password,} = req.body
         const user = await db.find_username_and_hash([username])
-        console.log(user)
+        req.session.user_id = user[0].user_id
         if (user.length === 0) {
           return res.status(400).send({message: 'username not found'})
         }
         const result = bcrypt.compareSync(password, user[0].hash)
-        console.log(result)
         if (result) {
           delete user[0].hash
           req.session.user = user[0]

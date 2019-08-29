@@ -15,6 +15,7 @@ hash TEXT);
 CREATE TABLE posts (
 post_id SERIAL PRIMARY KEY,
 title VARCHAR(45),
+author VARCHAR(45),
 img TEXT,
 content TEXT,
 author_id INT REFERENCES user_info(user_id)

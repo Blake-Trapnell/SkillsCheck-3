@@ -27,7 +27,7 @@ registerUser = () => {
   } = this.state
   axios.post('/auth/register', { username, password, profileimg })
     .then(res => {
-      this.props.setUser({username, profileimg, password})
+      this.props.setUser({username, profileimg})
       this.props.history.push('/dashboard')
     })
     .catch(err => {
@@ -38,9 +38,8 @@ registerUser = () => {
   login = () => {
     const {usernameInput: username, passwordInput: password} = this.state
     axios.post('/auth/login', {username, password}).then(res => {
- 
-      const {username, profile_img} = res.data.user
-      this.props.setUser({username, profile_img})
+      const {username, profile_img, user_id} = res.data.user
+      this.props.setUser({username, profile_img, user_id})
       this.props.history.push('/dashboard')
     })
     .catch(err => {
@@ -49,7 +48,7 @@ registerUser = () => {
   }
 
   render() {
-
+    
     return (
       <div className = "Auth">
           <div className= "auth_container">
@@ -69,6 +68,7 @@ registerUser = () => {
     )
   }
 }
+
 
 export default connect(
   null,

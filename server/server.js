@@ -22,7 +22,8 @@ app.use(express.json())
 
 app.post('/auth/register', authCtrl.register)
 app.post('/auth/login', authCtrl.login)
-app.get('/api/posts', postCtrl.getAll)
+app.get('/api/posts', postCtrl.getPosts)
+app.post('/api/posts', postCtrl.post)
 
 massive(CONNECTION_STRING).then(db=> {
     app.set('db',db)
