@@ -24,7 +24,8 @@ app.post('/auth/register', authCtrl.register)
 app.post('/auth/login', authCtrl.login)
 app.get('/api/posts', postCtrl.getPosts)
 app.post('/api/posts', postCtrl.post)
-
+app.get('/api/auth/me', authCtrl.getMe)
+app.delete('auth/logout', authCtrl.logout)
 massive(CONNECTION_STRING).then(db=> {
     app.set('db',db)
     app.listen(PORT, () => console.log(`^.^ welcome to ${PORT}`))

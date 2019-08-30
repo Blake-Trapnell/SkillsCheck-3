@@ -1,2 +1,2 @@
 SELECT * FROM posts
-WHERE author_id =! ${user_id}
+WHERE author_id != $1

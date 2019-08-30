@@ -1,44 +1,54 @@
 import React, {Component} from 'react'
 import './Dashboard.css'
 import axios from "axios"
-import { search} from "../../ducks/reducer"
+import { search, setUser} from "../../ducks/reducer"
 import { connect } from 'react-redux'
 
 class Dashboard extends Component {
   state = {
     posts: [],
-    userposts: [],
     search: '',
-    view_userposts: false
+    userposts: false
   }
 
   componentDidMount = async () => {
-    const res = await axios.get(`/api/posts`)
-   const posts = res.data
-   console.log(posts)
+    let res = await axios.get('/api/auth/me')
+    console.log(res.data)
+    this.props.setUser(res.data)
+      if( this.props.user_id === "") {
+        this.props.history.push('/')
+        return
+      }
+      const {userposts, search} = this.state
+
+    const result = await axios.get(`/api/posts?userposts=${userposts}&search=${search}&user_id=${this.props.user_id}`)
+   const posts = result.data
+
   this.setState({
     posts,
   })
   }
 
-  componentDidUpdate(prevProps, prevState){
-   const prevView_userposts = prevState.view_userposts
-   if (prevView_userposts === this.state.view_userposts){
-     return
-   }
-    const{posts, view_userposts} = this.state
-    console.log(view_userposts, this.props.user_id)
-    if (view_userposts === true) {
-   let otherPosts =  posts.filter(el => {
-    return  el.author_id !== this.props.user_id}
-      )
-    console.log(otherPosts)
-      this.setState({
-        posts: otherPosts
-      })
-    }
+  search = async () => {
+    const {userposts, search} = this.state
+    const res = await axios.get(`/api/posts?userposts=${userposts}&search=${search}&user_id=${this.props.user_id}`)
+   const posts = res.data
+
+  this.setState({
+    posts,
+  })
   }
 
+  iHateLife = async () => {
+    const {userposts, search} = this.state
+    const res = await axios.get(`/api/posts?userposts=${!userposts}&search=${search}&user_id=${this.props.user_id}`)
+    const posts = res.data
+ 
+   this.setState({
+     posts,
+     userposts: !userposts
+   })
+  }
 
   handleChange(e) {
     this.setState({
@@ -46,18 +56,16 @@ class Dashboard extends Component {
     })
   }
 
-  searchPosts(searchterm) {
-    this.props.search(searchterm)
-  }
+
 
   render() {
-    let {posts, view_userposts} = this.state
+    let {posts, userposts} = this.state
     return (
       <div>
             <div>Dashboard</div>
             <input type="text" onChange={(e)=> {this.handleChange(e.target.value)}}/>
-            <button onClick={()=> this.searchPosts(this.state.search)}>Search</button>
-            <input onChange={()=> {this.setState({view_userposts: !view_userposts})}} type="checkbox" checked={view_userposts}/>
+            <button onClick={this.search}>Search</button>
+            <input onChange={this.iHateLife} type="checkbox" checked={userposts}/>
             {posts.length > 0 ? 
               posts.map(el => (
                 <div className="Dashboard_Posts" key={el.post_id}>
@@ -79,4 +87,4 @@ function mapStateToProps(state) {
  }
  
 
-export default connect(mapStateToProps, {search})(Dashboard)
+export default connect(mapStateToProps, {search, setUser})(Dashboard)

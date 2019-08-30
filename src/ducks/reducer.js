@@ -12,6 +12,7 @@ const initialState = {
 //Action constants
 const SET_USER = "SET_USER"
 const SEARCH_POSTS = "SEARCH_POSTS"
+const KEEP_USER = "KEEP_USER"
 
 
 //action builderes
@@ -27,6 +28,12 @@ export function search (searchterm) {
         payload: searchterm
     }
 }
+export function keepUser (user) {
+    return {
+        type: KEEP_USER,
+        payload: user
+    }
+}
 
 
 //reducer
@@ -38,6 +45,9 @@ export default (state = initialState, action) => {
                 return {...state, username, user_id, profileimg}
             case SEARCH_POSTS:
                 return {...state, search: payload}
+            // case KEEP_USER:
+            //     const {username, profile_img: profileimg} = payload
+            //     return{...state, username, profileimg }
             default : return state
         }
 }

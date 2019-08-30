@@ -18,6 +18,12 @@ handleChange(e, key) {
   })
 }
 
+componentDidMount = async ()=> {
+  let res = await axios.get('/api/auth/me')
+  console.log(res.data)
+  this.props.setUser(res.data)
+}
+
 
 registerUser = () => {
   const {
